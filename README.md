@@ -11,4 +11,5 @@
 也许能够帮到你的资料：
 - [XV6中文文档](https://th0ar.gitbooks.io/xv6-chinese/content/)
 - [课程地址](https://pdos.csail.mit.edu/6.828/2018/overview.html)
-- [x86汇编语言：从实模式到保护模式](https://book.douban.com/subject/20492528/);
+- [x86汇编语言：从实模式到保护模式](https://book.douban.com/subject/20492528/)
+- [现代操作系统：原理与实现](https://book.douban.com/subject/35208251/)
