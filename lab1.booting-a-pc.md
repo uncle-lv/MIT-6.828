@@ -106,7 +106,7 @@ qemu之所以这样启动，是因为Intel 8088处理器就是如此设计的，
 > “硬连线（hard-wired）”一词，我没有找到合适的翻译，姑且直译了。
 > “hard-wired”一般用于形容计算机中不可更改的程序。
 
-要回答这个问题，我们需要了解一点实模式寻址相关的知识。在实模式下，地址按照这个公式进行转换：*物理地址 = 16 * 段基址地址 + 段内偏移（address = 16 * segment + offset）*。所以，当PC把CS和IP分别设置为0xf000和0xfff0时，所指代的物理地址是：
+要回答这个问题，我们需要了解一点实模式寻址相关的知识。在实模式下，地址按照这个公式进行转换：*物理地址 = 16 * 段基址地址 + 段内偏移（physical address = 16 * segment + offset）*。所以，当PC把CS和IP分别设置为0xf000和0xfff0时，所指代的物理地址是：
 ```
 16 * 0xf000 + 0xfff0   # in hex multiplication by 16 is
 = 0xf0000 + 0xfff0     # easy--just append a 0.
