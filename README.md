@@ -6,6 +6,11 @@
 
 课程的其中一部分是XV6操作系统，它是1970年开发的Unix V6版本的重新实现。实验所使用的JOS便是基于XV6改写。
 
+## 实验
+
+- [0.环境准备](https://github.com/uncle-lv/MIT-6.828/blob/main/0.environ-preparation.md)
+- [lab1.Booting a PC](https://github.com/uncle-lv/MIT-6.828/blob/main/lab1.booting-a-pc.md)
+
 <br/>
 
 也许能够帮到你的资料：
