@@ -12,7 +12,7 @@
 
 <br>
 
->注：这里我略过了*Getting Started with x86 assembly*和*Simulating the x86*这两部分内容。第一部分是学习x86汇编语法，需要读者自己学习。第二部分是使用qemu虚拟机模拟x86环境，这一部分我们已经在[环境准备](https://github.com/uncle-lv/MIT-6.828/blob/main/0.environ-preparation.md#%E9%AA%8C%E8%AF%81%E7%8E%AF%E5%A2%83)这一章节中学习过了，不再赘述。
+> 注：这里我略过了*Getting Started with x86 assembly*和*Simulating the x86*这两部分内容。第一部分是学习x86汇编语法，需要读者自己学习。第二部分是使用qemu虚拟机模拟x86环境，这一部分我们已经在[环境准备](https://github.com/uncle-lv/MIT-6.828/blob/main/0.environ-preparation.md#%E9%AA%8C%E8%AF%81%E7%8E%AF%E5%A2%83)这一章节中学习过了，不再赘述。
 
 <br>
 
@@ -114,7 +114,7 @@ qemu之所以这样启动，是因为Intel 8088处理器就是如此设计的，
 ```
 0xffff0是BIOS的最后16个字节（0x100000）。因此，BIOS所做的第一件事便是转跳回较为靠前的位置。这仅仅16个字节究竟能完成多少工作呢？
 
-> **Exercise 2.**使用GDB的`si`（步进指令）命令追踪更多的ROM BIOS指令，并尝试推测指令的作用。
+> **Exercise 2**.使用GDB的`si`（步进指令）命令追踪更多的ROM BIOS指令，并尝试推测指令的作用。
 > 你可以查阅[Phil Storrs I/O Ports Description](http://web.archive.org/web/20040404164813/members.iweb.net.au/~pstorr/pcbook/book2/book2.htm)和[6.828 reference materials page](https://pdos.csail.mit.edu/6.828/2018/reference.html)。
 > 你不必弄清楚所有指令的具体含义，只需要先对BIOS的工作有一个大概的了解即可。
 
