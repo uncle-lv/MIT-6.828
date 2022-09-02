@@ -130,23 +130,23 @@ PC的软盘和硬盘被划分为一个个大小为512字节、被称为扇区的
 > 前半句说这些地址*相当随意（fairly arbitrary）*是指这些地址本身是没有特殊含义的。但出于历史原因及兼容性考虑，这些地址已经成为了固定格式，所以后半句又说*它们是固定且统一的（fixed and standardized）*。
 > 这就好比，文字本身是无异议的符号，但是人类在交流的过程中，逐渐赋予了其特殊且固定的含义。
 
-从CD-ROM中加载操作系统的机制在PC的发展进程中出现得比较晚。因此，PC架构师趁机稍微重新设计了一下启动过程。所以，现代BIOS从CD-ROM中引导操作系统的方式有一点复杂（功能也更加强大了）。CD-ROM使用2048个字节的扇区，而不是512个字节。因此，在移交控制权之前，BIOS能够从磁盘中加载更大的启动镜像（而不仅仅只是一个扇区）。你可以在["El Torito" Bootable CD-ROM Format Specification](https://pdos.csail.mit.edu/6.828/2018/readings/boot-cdrom.pdf)中查看更多的信息。
+从CD-ROM中加载操作系统的机制在PC的发展进程中出现得比较晚。因此，PC架构师趁机稍微重新设计了一下启动过程。所以，现代BIOS从CD-ROM中引导操作系统的方式有一点复杂（功能也更加强大了）。CD-ROM使用2048个字节的扇区，而不是512个字节。因此，在移交控制权之前，BIOS能够从磁盘中加载更大的启动镜像（不止一个扇区）。你可以查看["El Torito" Bootable CD-ROM Format Specification](https://pdos.csail.mit.edu/6.828/2018/readings/boot-cdrom.pdf)中了解更多的信息。
 
-但在6.828中，我们采用的是传统的硬盘启动机制，这意味着我们的boot loader大小必须限制在512字节内。boot loader由一个汇编文件`boot/boot.S`和一个C文件`boot/main.c`组成。请仔细阅读这些源代码，并确保你理解了他们的工作流程。boot loader必须完成两个主要任务：
+但在6.828中，我们将采用传统的硬盘启动机制，这意味着我们的boot loader大小必须限制在512个字节内。boot loader由一个汇编文件`boot/boot.S`和一个C文件`boot/main.c`组成。请仔细阅读这些源代码，并确保你理解了他们的工作流程。boot loader必须完成两个主要任务：
 - 首先，boot loader将处理器的工作模式由实模式切换到32位的保护模式。因为只有在保护模式下，软件才能访问处理器物理地址空间中1MB以上的内存。在[PC Assembly Language](https://pdos.csail.mit.edu/6.828/2018/readings/pcasm-book.pdf)的章节1.2.7和1.2.8中，简要地介绍了保护模式。如果你想了解更多与保护模式相关的知识，可以查阅英特尔架构手册。目前，你只需要了解在保护模式下，分段地址转换为物理地址的方式与实模式是不同的，并且转换后的地址是32位的，而非16位。
-- 其次，boot loader通过x86的特殊IO指令使用IDE硬盘设备寄存器，直接从硬盘中读取内核。如果你想深入学习这些特殊IO指令，可以查看[the 6.828 reference page](https://pdos.csail.mit.edu/6.828/2018/reference.html)的“IDE hard drive controller”章节。在本课程中，你不需要过多地学习如何为特定设备编程：实际上，编写设备驱动是操作系统开发中非常重要地环节。但如果从概念性和整体架构的角度看，它是最无聊的部分之一。
+- 其次，boot loader通过x86的特殊IO指令使用IDE硬盘设备寄存器，直接从硬盘中读取内核。如果你想深入学习这些特殊IO指令，可以查看[the 6.828 reference page](https://pdos.csail.mit.edu/6.828/2018/reference.html)的“IDE hard drive controller”章节。在本课程中，你不需要过多地学习如何为特定设备编程：实际上，编写设备驱动是操作系统开发中非常重要的一个环节。但如果从概念化和整体架构的角度看，它是最无聊的部分之一。
 
-在你理解了boot loader的源码之后，请阅读`obj/boot/boot.asm`文件。该文件是GNUmakefile在编译boot loader后创建的boot loader反汇编文件。通过这个反汇编文件，我们可以轻松、准确地查看boot loader代码在物理内存中的位置，和在使用GDB单步调试boot loader时，方便地追踪执行过程。`obj/kern/kernel.asm`是JOS内核的反汇编，对于我们的debug同样重要。
+在你理解了boot loader的源码之后，请阅读`obj/boot/boot.asm`文件。该文件是GNUmakefile在编译boot loader后创建的boot loader反汇编文件。通过这个反汇编文件，我们可以轻松、准确地查看boot loader代码在物理内存中的位置。在使用GDB单步调试boot loader时，也可以方便地追踪执行过程。`obj/kern/kernel.asm`是JOS内核的反汇编，对于我们的debug同样重要。
 
 在GDB中，你可以使用`b`命令来设置地址断点。比如，`b *0x7c00`表示在地址0x7C00处设置一个断点。在断点处，你可以使用`c`和`si`命令继续向下执行：`c`会执行到qemu的下一个断点（或者直到你在GDB中按下`Ctrl-C`），`si N`会一次性执行N条指令。
 
-你可以使用`x/i`命令来查看内存中的指令（除了下一条将要执行的指令，GDB会自动打印）。这个命令还有`x/Ni ADDR`语法，其中，N表示要连续反汇编的指令数，ADDR表示开始反汇编的地址。
+你可以使用`x/i`命令来查看内存中的指令（除了下一条将要执行的指令，GDB会自动打印它）。这个命令还有一个`x/Ni ADDR`语法，其中，N表示要连续反汇编的指令数，ADDR表示开始反汇编的地址。
 
-> **Exercise3**.阅读[lab tools guide](https://pdos.csail.mit.edu/6.828/2018/labguide.html)，尤其是与GDB命令有关的内容，即使你已经非常熟悉GDB。其中一些（你不知道的）高级的GDB命令对你的操作系统实验非常用帮助。
+> **Exercise3**.阅读[lab tools guide](https://pdos.csail.mit.edu/6.828/2018/labguide.html)，尤其是与GDB命令有关的内容，即使你已经非常熟悉GDB。其中一些（你不知道的）高级的GDB命令对你的操作系统实验非常有帮助。
 > 
-> 在地址0x700c处设置一个断点，这里是加载引导扇区的地方。继续执行，直至到达该断点。追踪`boot/boot.S`中的代码，通过源码和反汇编文件`obj/boot/boot.asm`，持续追踪你的位置。同时，使用GDB的`x/i`命令，反汇编boot loader中指令序列，并比较原本的boot loader源码与`obj/boot/boot.asm`、GDB中的反汇编代码的区别。
+> 在地址0x700c处设置一个断点，这里是加载引导扇区的地方。继续执行，直至到达该断点。追踪`boot/boot.S`中的代码，通过源码和反汇编文件`obj/boot/boot.asm`，持续追踪你所处的位置。同时，使用GDB的`x/i`命令，反汇编boot loader中指令序列，并比较原本的boot loader源码与`obj/boot/boot.asm`、GDB中的反汇编代码的区别。
 > 
-> 追踪`boot/main.c`中的`bootmain()`函数，并进入`readsect()`函数。弄清楚`readsect()`中每条语句对应的汇编指令。继续追踪`readsect()`函数的剩余部分，直至返回`bootmain()`函数中。然后，找到从磁盘读取内核剩余扇区的for循环的开始和结束的地方。找出循环结束后，将会执行的代码，并设置断点。然后，继续执行至该断点处。最后，单步调试boot loader余下的部分。
+> 追踪`boot/main.c`中的`bootmain()`函数，并进入`readsect()`函数。弄清楚`readsect()`中每条语句对应的汇编指令。继续追踪`readsect()`函数的剩余部分，直至返回`bootmain()`函数中。然后，找到从磁盘读取内核剩余扇区的for循环的开始与结束处。找出循环结束后，将会执行的代码，并设置断点。然后，继续执行至该断点处。最后，单步调试boot loader余下的部分。
 
 回答以下问题：
 - 处理器从哪里开始执行32位代码？处理器是如何从16位模式切换到32位模式的？
